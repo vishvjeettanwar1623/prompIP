@@ -43,3 +43,7 @@ coverage/
 .cache/
 tmp/
 temp/
+
+# Pitch documentation - internal use only
+PITCH_DECK_PROMPT.md
+PITCH_PRESENTATION_SCRIPT.md
