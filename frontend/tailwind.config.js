@@ -9,13 +9,10 @@ export default {
       colors: {
         primary: '#10B981', // Green accent
         secondary: '#059669', // Darker green
-        dark: {
-          900: '#0a0a0a', // Darkest background
-          800: '#111111', // Card background
-          700: '#1a1a1a', // Lighter card
-          600: '#262626', // Border/divider
-          500: '#404040', // Muted elements
-        },
+        dark: '#0F1419',
+        darker: '#0B0E11',
+        card: '#1A1F26',
+        border: '#2A3441',
         accent: '#10B981',
       },
     },
