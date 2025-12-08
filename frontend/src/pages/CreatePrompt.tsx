@@ -54,7 +54,7 @@ const CreatePrompt: React.FC = () => {
             licenseType: 'ONE_TIME',
           });
         })
-        .catch((err) => {
+        .catch(() => {
           setError('Failed to load parent prompt');
         })
         .finally(() => {

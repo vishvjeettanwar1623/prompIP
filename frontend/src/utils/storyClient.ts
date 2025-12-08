@@ -1,5 +1,5 @@
 import { StoryClient, StoryConfig } from '@story-protocol/core-sdk';
-import { http, WalletClient, custom } from 'viem';
+import { WalletClient, custom } from 'viem';
 import { storyAeneid } from '../wagmi.config';
 
 /**
