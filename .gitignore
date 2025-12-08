@@ -32,9 +32,13 @@ Thumbs.db
 logs/
 *.log
 
-# Database
+# Database - SQLite (local development only)
 *.db
+*.db-journal
 *.sqlite
+*.sqlite3
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
 
 # Testing
 coverage/
