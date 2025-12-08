@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  walletAddress   String    @unique
+  nickname        String?   @unique
+  reputationPoints Int      @default(0)
+  createdAt       DateTime  @default(now())
+  
+  // Relations
+  prompts        Prompt[]       @relation("UserPrompts")
+  licenses       License[]      @relation("UserLicenses")
+  verifications  Verification[] @relation("UserVerifications")
+}
+
+model Prompt {
+  id                  String    @id @default(uuid())
+  creatorId           String
+  title               String
+  description         String
+  promptText          String
+  category            String
+  licenseType         String    // "ONE_TIME", "RESALE_ALLOWED"
+  storyIpId           String?
+  storyLicenseTermsId String?
+  parentPromptId      String?   // For remix/derivative prompts
+  isListed            Boolean   @default(true)
+  trustScore          Float     @default(0)
+  effectivenessScore  Float     @default(0)
+  verificationCount   Int       @default(0)
+  createdAt           DateTime  @default(now())
+  
+  // Relations
+  creator             User           @relation("UserPrompts", fields: [creatorId], references: [id])
+  licenses            License[]      @relation("PromptLicenses")
+  verifications       Verification[] @relation("PromptVerifications")
+  parentPrompt        Prompt?        @relation("PromptDerivatives", fields: [parentPromptId], references: [id])
+  derivatives         Prompt[]       @relation("PromptDerivatives")
+  
+  @@index([creatorId])
+  @@index([category])
+  @@index([isListed])
+  @@index([trustScore])
+  @@index([verificationCount])
+  @@index([parentPromptId])
+}
+
+model License {
+  id             String   @id @default(uuid())
+  promptId       String
+  buyerId        String
+  storyLicenseId String
+  txHash         String
+  createdAt      DateTime @default(now())
+  
+  // Relations
+  prompt         Prompt   @relation("PromptLicenses", fields: [promptId], references: [id])
+  buyer          User     @relation("UserLicenses", fields: [buyerId], references: [id])
+  
+  @@index([promptId])
+  @@index([buyerId])
+}
+
+model Verification {
+  id        String   @id @default(uuid())
+  userId    String
+  promptId  String
+  isUseful  Boolean  // true = useful, false = not useful
+  feedback  String?  // optional text feedback
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation("UserVerifications", fields: [userId], references: [id])
+  prompt    Prompt   @relation("PromptVerifications", fields: [promptId], references: [id])
+  
+  @@unique([userId, promptId]) // one verification per user per prompt
+  @@index([promptId])
+  @@index([isUseful])
+}
