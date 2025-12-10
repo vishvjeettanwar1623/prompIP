@@ -54,26 +54,26 @@ api.interceptors.response.use(
 
 // Prompt API
 export const promptAPI = {
-  createPrompt: (data: any) => api.post('/api/prompts', data),
-  getMarketplace: () => api.get('/api/prompts/marketplace'),
-  getPromptById: (id: string) => api.get(`/api/prompts/${id}`),
-  registerOnChain: (id: string) => api.post(`/api/prompts/${id}/register`),
-  getUserPrompts: () => api.get('/api/prompts/user/prompts'),
-  getUserLicenses: () => api.get('/api/prompts/user/licenses'),
-  deletePrompt: (id: string) => api.delete(`/api/prompts/${id}`),
+  createPrompt: (data: any) => api.post('/prompts', data),
+  getMarketplace: () => api.get('/prompts/marketplace'),
+  getPromptById: (id: string) => api.get(`/prompts/${id}`),
+  registerOnChain: (id: string) => api.post(`/prompts/${id}/register`),
+  getUserPrompts: () => api.get('/prompts/user/prompts'),
+  getUserLicenses: () => api.get('/prompts/user/licenses'),
+  deletePrompt: (id: string) => api.delete(`/prompts/${id}`),
   
   // Verification API
   verifyPrompt: (id: string, data: { userId: string; isUseful: boolean; feedback?: string }) =>
-    api.post(`/api/prompts/${id}/verify`, data),
-  getVerifications: (id: string) => api.get(`/api/prompts/${id}/verifications`),
+    api.post(`/prompts/${id}/verify`, data),
+  getVerifications: (id: string) => api.get(`/prompts/${id}/verifications`),
   
   // Leaderboards API
-  getTopCreators: (limit?: number) => api.get('/api/prompts/leaderboards/creators', { params: { limit } }),
+  getTopCreators: (limit?: number) => api.get('/prompts/leaderboards/creators', { params: { limit } }),
   getMostUseful: (limit?: number, minVerifications?: number) => 
-    api.get('/api/prompts/leaderboards/useful', { params: { limit, minVerifications } }),
-  getMostVerified: (limit?: number) => api.get('/api/prompts/leaderboards/verified', { params: { limit } }),
+    api.get('/prompts/leaderboards/useful', { params: { limit, minVerifications } }),
+  getMostVerified: (limit?: number) => api.get('/prompts/leaderboards/verified', { params: { limit } }),
   
   // Nickname API
-  setNickname: (data: { userId: string; nickname: string }) => api.post('/api/prompts/user/nickname', data),
-  checkNickname: (nickname: string) => api.get(`/api/prompts/nickname/${nickname}/available`),
+  setNickname: (data: { userId: string; nickname: string }) => api.post('/prompts/user/nickname', data),
+  checkNickname: (nickname: string) => api.get(`/prompts/nickname/${nickname}/available`),
 };
