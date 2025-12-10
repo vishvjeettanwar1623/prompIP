@@ -43,7 +43,11 @@ const Dashboard: React.FC = () => {
   // Store wallet address in localStorage for API interceptor
   useEffect(() => {
     if (address) {
-      localStorage.setItem('walletAddress', address);
+      try {
+        localStorage.setItem('walletAddress', address);
+      } catch (error) {
+        console.warn('Unable to store wallet address in localStorage');
+      }
     }
   }, [address]);
 
@@ -53,9 +57,11 @@ const Dashboard: React.FC = () => {
 
   const fetchData = async () => {
     try {
+      // Use the full API base URL
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
       const [promptsRes, userRes] = await Promise.all([
         promptAPI.getUserPrompts(),
-        axios.get('/api/auth/user-info', {
+        axios.get(`${apiBaseUrl}/api/auth/user-info`, {
           headers: { 'x-wallet-address': address },
         }),
       ]);
@@ -74,8 +80,10 @@ const Dashboard: React.FC = () => {
     setSettingUsername(true);
 
     try {
+      // Use the full API base URL
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
       await axios.post(
-        '/api/auth/set-username',
+        `${apiBaseUrl}/api/auth/set-username`,
         { nickname: newUsername },
         {
           headers: {

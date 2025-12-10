@@ -33,7 +33,11 @@ const CreatePrompt: React.FC = () => {
   // Store wallet address in localStorage for API interceptor
   useEffect(() => {
     if (address) {
-      localStorage.setItem('walletAddress', address);
+      try {
+        localStorage.setItem('walletAddress', address);
+      } catch (error) {
+        console.warn('Unable to store wallet address in localStorage');
+      }
     }
   }, [address]);
 

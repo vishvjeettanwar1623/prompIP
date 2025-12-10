@@ -18,8 +18,10 @@ const UsernameModal: React.FC<UsernameModalProps> = ({ isOpen, onClose, walletAd
     setLoading(true);
 
     try {
+      // Use the full API base URL
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
       await axios.post(
-        '/api/auth/set-username',
+        `${apiBaseUrl}/api/auth/set-username`,
         { nickname: username },
         {
           headers: {

@@ -20,7 +20,9 @@ const Navbar: React.FC = () => {
 
       setLoading(true);
       try {
-        const response = await axios.get('/api/auth/user-info', {
+        // Use the full API base URL
+        const apiBaseUrl = import.meta.env.VITE_API_URL || '/api';
+        const response = await axios.get(`${apiBaseUrl}/api/auth/user-info`, {
           headers: { 'x-wallet-address': address },
         });
         
