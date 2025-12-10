@@ -155,18 +155,28 @@ export const getPromptById = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ error: "Prompt not found" });
     }
 
-    // Check if user has access to full prompt
+    // Check if user has verified this prompt (for UI purposes)
+    let hasVerified = false;
+    if (userId) {
+      const verification = await prisma.verification.findUnique({
+        where: {
+          userId_promptId: {
+            userId,
+            promptId: id
+          }
+        }
+      });
+      hasVerified = !!verification;
+    }
+    
     const isCreator = userId && prompt.creatorId === userId;
-    const hasLicense = userId && prompt.licenses.length > 0;
-    const hasAccess = isCreator || hasLicense;
 
-    // Remove promptText if user doesn't have access
-    const response: any = { ...prompt };
-    if (!hasAccess) {
-      delete response.promptText;
-      response.locked = true;
-    } else {
-      response.locked = false;
+    // Everyone can see prompt content to evaluate it
+    const response: any = { 
+      ...prompt,
+      locked: false,
+      isCreator,
+      hasVerified
     }
 
     // Remove licenses array from response (just for access check)
