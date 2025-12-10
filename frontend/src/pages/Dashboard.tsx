@@ -333,7 +333,7 @@ const Dashboard: React.FC = () => {
                       </Link>
                       {prompt.storyIpId && (
                         <a
-                          href={`https://testnet.storyscan.xyz/ipa/${prompt.storyIpId}`}
+                          href={`https://aeneid.storyscan.io/address/${prompt.storyIpId}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block px-4 py-2 bg-accent/10 border border-accent/30 rounded-md text-sm text-accent hover:bg-accent/20 text-center transition-all"
