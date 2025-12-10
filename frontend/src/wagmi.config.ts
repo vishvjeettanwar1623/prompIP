@@ -27,7 +27,7 @@ export const storyAeneid = defineChain({
 
 export const config = getDefaultConfig({
   appName: 'PrompIP',
-  projectId: 'c3b5c9a2e8f4d1b6a7c8e9f0d1b2c3d4', // Placeholder - get real one from cloud.walletconnect.com
+  projectId: '2470b68492f302817df0919bfba8383f', // Placeholder - get real one from cloud.walletconnect.com
   chains: [storyAeneid],
   transports: {
     [storyAeneid.id]: http(),
