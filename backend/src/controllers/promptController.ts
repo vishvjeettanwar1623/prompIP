@@ -14,7 +14,7 @@ const prisma = new PrismaClient();
 // Create a new prompt (draft) - can be original or remix
 export const createPrompt = async (req: AuthRequest, res: Response) => {
   try {
-    const { title, description, promptText, category, licenseType, parentPromptId } =
+    const { title, description, promptText, category, remixAllowed, parentPromptId } =
       req.body;
     const userId = req.userId!;
 
@@ -32,13 +32,16 @@ export const createPrompt = async (req: AuthRequest, res: Response) => {
       }
     }
 
+    // Map remixAllowed (boolean) to licenseType (string) for database compatibility
+    const licenseType = remixAllowed === false ? "ONE_TIME" : "RESALE_ALLOWED";
+
     const prompt = await prisma.prompt.create({
       data: {
         title,
         description,
         promptText,
         category,
-        licenseType: licenseType || "ONE_TIME",
+        licenseType,
         creatorId: userId,
         parentPromptId: parentPromptId || null,
         isListed: true,
@@ -221,14 +224,16 @@ export const registerPromptOnChain = async (req: AuthRequest, res: Response) => 
         {
           name: prompt.title,
           description: prompt.description,
+          promptText: prompt.promptText || undefined,
           attributes: [
             { trait_type: "category", value: prompt.category },
-            { trait_type: "license_type", value: prompt.licenseType },
+            { trait_type: "remix_allowed", value: prompt.licenseType === "RESALE_ALLOWED" ? "true" : "false" },
             { trait_type: "remix_of", value: prompt.parentPrompt!.title },
           ],
         },
         prompt.parentPrompt!.storyIpId as Address,
-        BigInt(prompt.parentPrompt!.storyLicenseTermsId!)
+        BigInt(prompt.parentPrompt!.storyLicenseTermsId!),
+        reputationData
       );
 
       // Update prompt with Story data (derivatives don't need separate license terms)
@@ -253,9 +258,10 @@ export const registerPromptOnChain = async (req: AuthRequest, res: Response) => 
         {
           name: prompt.title,
           description: prompt.description,
+          promptText: prompt.promptText || undefined,
           attributes: [
             { trait_type: "category", value: prompt.category },
-            { trait_type: "license_type", value: prompt.licenseType },
+            { trait_type: "remix_allowed", value: prompt.licenseType === "RESALE_ALLOWED" ? "true" : "false" },
           ],
         },
         reputationData

@@ -63,7 +63,7 @@ export const promptAPI = {
   deletePrompt: (id: string) => api.delete(`/prompts/${id}`),
   
   // Verification API
-  verifyPrompt: (id: string, data: { userId: string; isUseful: boolean; feedback?: string }) =>
+  verifyPrompt: (id: string, data: { isUseful: boolean; feedback?: string }) =>
     api.post(`/prompts/${id}/verify`, data),
   getVerifications: (id: string) => api.get(`/prompts/${id}/verifications`),
   

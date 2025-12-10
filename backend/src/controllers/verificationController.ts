@@ -9,11 +9,18 @@ const prisma = new PrismaClient();
 export const verifyPrompt = async (req: Request, res: Response) => {
   try {
     const { id: promptId } = req.params;
-    const { userId, isUseful, feedback } = req.body;
+    const { isUseful, feedback } = req.body;
+    
+    // Get userId from auth middleware
+    const userId = (req as any).userId;
+    
+    if (!userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
 
     // Validation
-    if (!userId || typeof isUseful !== 'boolean') {
-      return res.status(400).json({ error: 'userId and isUseful are required' });
+    if (typeof isUseful !== 'boolean') {
+      return res.status(400).json({ error: 'isUseful is required and must be a boolean' });
     }
 
     // Check if prompt exists

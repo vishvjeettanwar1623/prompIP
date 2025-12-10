@@ -6,6 +6,7 @@ import { createHash } from "crypto";
 interface PromptMetadata {
   name: string;
   description: string;
+  promptText?: string;
   externalUrl?: string;
   attributes?: { trait_type: string; value: string }[];
 }
@@ -78,6 +79,7 @@ export function generateIPMetadata(
   const ipMetadata = {
     name: metadata.name,
     description: metadata.description,
+    prompt_content: metadata.promptText || "",
     external_url: metadata.externalUrl || "https://prompip.app",
     attributes: [
       ...(metadata.attributes || []),
@@ -160,7 +162,8 @@ export async function registerPromptAsIP(metadata: PromptMetadata, reputation?: 
 export async function registerDerivativePrompt(
   metadata: PromptMetadata,
   parentIpId: Address,
-  parentLicenseTermsId: bigint
+  parentLicenseTermsId: bigint,
+  reputation?: ReputationData
 ) {
   try {
     // Get or create SPG NFT contract
@@ -168,6 +171,10 @@ export async function registerDerivativePrompt(
     
     console.log(`🔄 Registering derivative prompt: "${metadata.name}"`);
     console.log(`👆 Parent IP: ${parentIpId}`);
+
+    // Generate metadata with reputation data
+    const { metadataJson, metadataHash } = generateIPMetadata(metadata, reputation);
+    console.log(`📊 Including reputation data: Trust ${reputation?.trustScore || 0}%, Verifications: ${reputation?.verificationCount || 0}`);
 
     // Mint NFT and register as derivative in one transaction
     const response = await client.ipAsset.mintAndRegisterIpAndMakeDerivative({
@@ -180,8 +187,8 @@ export async function registerDerivativePrompt(
         maxRevenueShare: 0, // No revenue share
       },
       ipMetadata: {
-        ipMetadataURI: "",
-        ipMetadataHash: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
+        ipMetadataURI: `data:application/json;base64,${Buffer.from(metadataJson).toString('base64')}`, // Inline metadata as data URI
+        ipMetadataHash: metadataHash,
         nftMetadataURI: "",
         nftMetadataHash: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
       },

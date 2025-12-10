@@ -108,7 +108,6 @@ const PromptDetail: React.FC = () => {
 
     try {
       const response = await promptAPI.verifyPrompt(id!, {
-        userId: address,
         isUseful,
         feedback: verificationFeedback || undefined,
       });

@@ -24,7 +24,7 @@ const CreatePrompt: React.FC = () => {
     description: '',
     promptText: '',
     category: 'coding',
-    licenseType: 'ONE_TIME',
+    remixAllowed: true,
   });
   const [loading, setLoading] = useState(false);
   const [loadingParent, setLoadingParent] = useState(false);
@@ -55,7 +55,7 @@ const CreatePrompt: React.FC = () => {
             description: `A remix of "${parent.title}" - ${parent.description}`,
             promptText: parent.promptText || '',
             category: parent.category,
-            licenseType: 'ONE_TIME',
+            remixAllowed: true,
           });
         })
         .catch(() => {
@@ -219,47 +219,60 @@ const CreatePrompt: React.FC = () => {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                This content will be locked until users verify or purchase a license
+                This content will be locked until you register it on-chain.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="category" className="block text-sm font-semibold text-dark-200 mb-2">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  className="input"
+            <div className="glass border border-primary-500/20 rounded-xl p-4 mb-6">
+              <label className="flex items-center justify-between cursor-pointer group">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-colors">
+                    <svg className="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-dark-200">Allow Remixing</p>
+                    <p className="text-xs text-dark-400">Let others create derivatives of your prompt</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={formData.remixAllowed}
+                  onClick={() => setFormData({ ...formData, remixAllowed: !formData.remixAllowed })}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-dark-800 ${
+                    formData.remixAllowed ? 'bg-primary-500' : 'bg-dark-600'
+                  }`}
                 >
-                  <option value="coding">💻 Coding</option>
-                  <option value="marketing">📈 Marketing</option>
-                  <option value="writing">✍️ Writing</option>
-                  <option value="design">🎨 Design</option>
-                  <option value="business">💼 Business</option>
-                  <option value="education">📚 Education</option>
-                  <option value="other">🔧 Other</option>
-                </select>
-              </div>
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      formData.remixAllowed ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </label>
+            </div>
 
-              <div>
-                <label htmlFor="licenseType" className="block text-sm font-semibold text-dark-200 mb-2">
-                  License Type
-                </label>
-                <select
-                  id="licenseType"
-                  name="licenseType"
-                  value={formData.licenseType}
-                  onChange={handleChange}
-                  className="input"
-                >
-                  <option value="ONE_TIME">One-Time Use</option>
-                  <option value="RESALE_ALLOWED">Resale Allowed</option>
-                </select>
-              </div>
+            <div>
+              <label htmlFor="category" className="block text-sm font-semibold text-dark-200 mb-2">
+                Category
+              </label>
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="input"
+              >
+                <option value="coding">💻 Coding</option>
+                <option value="marketing">📈 Marketing</option>
+                <option value="writing">✍️ Writing</option>
+                <option value="design">🎨 Design</option>
+                <option value="business">💼 Business</option>
+                <option value="education">📚 Education</option>
+                <option value="other">🔧 Other</option>
+              </select>
             </div>
 
             <div className="glass border border-primary-500/20 rounded-xl p-5">

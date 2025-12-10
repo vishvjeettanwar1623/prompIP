@@ -32,7 +32,7 @@ model Prompt {
   description         String
   promptText          String
   category            String
-  licenseType         String    // "ONE_TIME", "RESALE_ALLOWED"
+  licenseType         String    @default("ONE_TIME") // Kept for compatibility, maps to remixAllowed in code
   storyIpId           String?
   storyLicenseTermsId String?
   parentPromptId      String?   // For remix/derivative prompts
